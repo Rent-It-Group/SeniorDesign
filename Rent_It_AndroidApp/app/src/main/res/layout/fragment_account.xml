@@ -1,0 +1,153 @@
+<!--refer to fragment_chat_list.xml-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/windowBackground"
+    tools:context="com.rent_it_app.rent_it.views.AvailabeItemFragment">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/tab_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!--<Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Profile"
+                android:background="@drawable/buttonshape1"
+                android:minHeight="30dp"
+                android:textColor="#FFFFFF"
+                android:layout_weight="1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Payment Method"
+                android:minHeight="30dp"
+                android:background="@drawable/buttonshape2"
+                android:textColor="#616161"
+                android:layout_weight="1"/>-->
+
+        </LinearLayout>
+
+        <ImageView
+            android:contentDescription="@string/app_name"
+            android:layout_width="121dp"
+            android:layout_height="121dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="125dp"
+            android:layout_marginStart="125dp"
+            android:src="@drawable/sample"
+            android:id="@+id/profile" />
+
+        <TextView
+            android:text="Mimi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="155dp"
+            android:layout_marginStart="155dp"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:id="@+id/nick_name" />
+
+
+
+        <TextView
+            android:text="name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:textColor="#A0522D"
+            android:textSize="20sp"
+            android:id="@+id/name_title"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="26dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/ic_account"
+                    android:id="@+id/name_profile" />
+
+                <TextView
+                    android:text="Mizumi Malhan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="20sp"
+                    android:id="@+id/name" />
+
+        </LinearLayout>
+
+        <TextView
+            android:text="email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:textColor="#A0522D"
+            android:textSize="20sp"
+            android:id="@+id/email_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_send"
+            android:id="@+id/ic_email" />
+
+            <TextView
+                android:text="mmalhan@oakland.edu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:textSize="20sp"
+                android:id="@+id/email" />
+
+
+        </LinearLayout>
+
+        <Button
+        android:id="@+id/braintree_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Review Payment Method"
+            android:layout_marginTop="40dp"
+            android:background="@color/colorAccent"/>
+
+        <Button
+            android:id="@+id/FCM_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FCM"/>
+
+
+    </LinearLayout>
+</FrameLayout>

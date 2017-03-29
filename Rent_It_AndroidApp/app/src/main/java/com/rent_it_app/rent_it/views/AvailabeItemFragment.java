@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
 import com.amazonaws.regions.Regions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.rent_it_app.rent_it.Constants;
 import com.rent_it_app.rent_it.EditItemActivity;
@@ -71,7 +73,7 @@ public class AvailabeItemFragment extends Fragment {
 
         itemEndpoint = retrofit.create(ItemEndpoint.class);
 
-        credentialsProvider = new CognitoCachingCredentialsProvider(
+        /*credentialsProvider = new CognitoCachingCredentialsProvider(
                 getContext(),  // getApplicationContext(),
                 Constants.COGNITO_POOL_ID, // Identity Pool ID
                 Regions.US_WEST_2 // Region
@@ -81,7 +83,7 @@ public class AvailabeItemFragment extends Fragment {
         syncClient = new CognitoSyncManager(
                 getContext(),
                 Regions.US_WEST_2, // Region
-                credentialsProvider);
+                credentialsProvider);*/
 
         return view;
     }
@@ -107,18 +109,18 @@ public class AvailabeItemFragment extends Fragment {
     private void loadItemList() {
 
         iList = new ArrayList<Item>();
+        FirebaseUser myUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        Call<ArrayList<Item>> call = itemEndpoint.getItems();
+
+
+        Call<ArrayList<Item>> call = itemEndpoint.getItemsByUid(myUser.getUid());
         call.enqueue(new Callback<ArrayList<Item>>() {
             @Override
             public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
                 int statusCode = response.code();
                 //List<Item> items = response.body();
                 iList = response.body();
-                /*StringBuilder sb = new StringBuilder();
-                for (Item i: items){
-                    sb.append(i.getTitle() + ",");
-                }*/
+
 
                 //tv1.setText(sb.toString());
                 list.setAdapter(new ItemListAdapter());

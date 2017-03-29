@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Rating;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -34,6 +35,8 @@ import com.rent_it_app.rent_it.firebase.Config;
 import com.rent_it_app.rent_it.json_models.Chat;
 import com.rent_it_app.rent_it.json_models.Conversation;
 import com.rent_it_app.rent_it.json_models.Item;
+import com.rent_it_app.rent_it.json_models.Rental;
+import com.rent_it_app.rent_it.json_models.RentalEndpoint;
 import com.rent_it_app.rent_it.json_models.Review;
 import com.rent_it_app.rent_it.json_models.ReviewEndpoint;
 
@@ -60,13 +63,14 @@ public class ListingActivity extends BaseActivity{
     Item myItem;
     Retrofit retrofit;
     ReviewEndpoint reviewEndpoint;
+    RentalEndpoint rentalEndpoint;
     private Review rList;
     Gson gson;
     private TextView txtTitle, txtDescription, txtCondition, txtCity, txtRate;
-    private TextView rTitle, rReviewer, rComment;
-    private Button readMore,startChat;
-    private RatingBar itemRating;
-    private ProgressDialog progress;
+    private TextView rTitle, rReviewer, rComment, oName;
+    private Button readMore,startChat,ownerReviewB;
+    private RatingBar itemRating, ownerRating, overallRating;
+    //private ProgressDialog progress;
     private Handler mHandler = new Handler();
     private ImageView myPhoto;
 
@@ -118,11 +122,17 @@ public class ListingActivity extends BaseActivity{
         txtRate = (TextView)findViewById(R.id.rate);
         rTitle = (TextView)findViewById(R.id.rTitle);
         rReviewer = (TextView)findViewById(R.id.rReviewer);
+        oName = (TextView)findViewById(R.id.ownerName);
         rComment = (TextView)findViewById(R.id.rComment);
         readMore = (Button)findViewById(R.id.readMoreButton);
         startChat = (Button) findViewById(R.id.contact_button);
+        ownerReviewB = (Button) findViewById(R.id.ownerReview);
         itemRating = (RatingBar) findViewById(R.id.rRating);
+        overallRating = (RatingBar) findViewById(R.id.overallRating);
+        ownerRating = (RatingBar) findViewById(R.id.ownerRating);
         myPhoto = (ImageView) findViewById(R.id.photo);
+
+
         //progress = ProgressDialog.show(this, "dialog title","dialog message", true);
 
         //progress.show();
@@ -131,6 +141,9 @@ public class ListingActivity extends BaseActivity{
         txtDescription.setText(myItem.getDescription());
         txtCity.setText("Location : " + myItem.getCity());
         txtCondition.setText("Condition : " + myItem.getCondition());
+        //oName.setText(myItem.getUid());
+        oName.setText("Edward James");
+        overallRating.setRating(5);
         txtRate.setText("$" + myItem.getRate() + " /day");
         //txtRate.setText("$" + String.format("%.2f", myItem.getRate()));
         File outputDir = getApplicationContext().getCacheDir(); // context being the Activity pointer
@@ -172,35 +185,35 @@ public class ListingActivity extends BaseActivity{
                 .build();
 
         reviewEndpoint = retrofit.create(ReviewEndpoint.class);
-        //rList = new ArrayList<Review>();
-
+        rentalEndpoint = retrofit.create(RentalEndpoint.class);
 
         Call<Review> call = reviewEndpoint.getLatestReviewByItemId(itemId);
-        //Call<ArrayList<Review>> call = reviewEndpoint.getLatestReviewByItemId(itemId);
+
         call.enqueue(new Callback<Review>() {
             @Override
             public void onResponse(Call<Review> call, Response<Review> response) {
+
                 int statusCode = response.code();
                 rList = response.body();
 
-                    Log.d("response ",""+response);
+                Log.d("response ",""+response);
                 Log.d("response.body() ",""+response.body());
                 Log.d("rList ",""+rList);
                 Log.d("response.raw()",""+response.raw());
                 Log.d("response.toString() ",""+response);
 
-                //Log.d("nullCheck",rList.toString());
-                    rTitle.setText(rList.getTitle());
-                    itemRating.setRating(rList.getItemRating());
-                    Log.d("getItemRating() ","" + rList.getItemRating());
-                    //rReviewer.setText("by " + rList.getReviewer());
-                    //till we create user model
-                    rReviewer.setText("by James L");
-                    String s = rList.getItemComment();
-                    if (s.length() > 100) {
-                        s = s.substring(0, 100) + "...";
-                    }
-                    rComment.setText(s);
+
+                rTitle.setText(rList.getTitle());
+                Log.d("getItemRating() ","" + rList.getItemRating());
+                Log.d("getOwnerRating() ","" + rList.getOwnerRating());
+                itemRating.setRating(rList.getItemRating());
+                ownerRating.setRating(rList.getOwnerRating());
+                rReviewer.setText("by Bonnie L");
+                String s = rList.getItemComment();
+                if (s.length() > 100) {
+                    s = s.substring(0, 100) + "...";
+                }
+                rComment.setText(s);
                 Log.d("retrofit.call.enqueue", ""+statusCode);
                 mHandler.postDelayed(new Runnable() {
                     public void run() {
@@ -211,6 +224,7 @@ public class ListingActivity extends BaseActivity{
 
             @Override
             public void onFailure(Call<Review> call, Throwable t) {
+
                 rComment.setText("No review available");
                 readMore.setVisibility(View.GONE);
                 rTitle.setVisibility(View.GONE);
@@ -238,6 +252,16 @@ public class ListingActivity extends BaseActivity{
             }
         });
 
+        ownerReviewB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent myIntent = new Intent(ListingActivity.this, ShowOwnerReviewsActivity.class);
+                myIntent.putExtra("OWNER_ID", rList.getOwner());
+                ListingActivity.this.startActivity(myIntent);
+            }
+        });
+
         startChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,8 +273,9 @@ public class ListingActivity extends BaseActivity{
                 defaultFirstMsg.setSender(myUser.getUid());
                 defaultFirstMsg.setReceiver(myItem.getUid());
                 defaultFirstMsg.setStatus(Chat.STATUS_SENDING);
-                String defaultMsg = "Hi " + myItem.getUid() + ","
-                                  + "I'm interested in renting your "
+                String defaultMsg = "Hi " +
+                        myItem.getUid()+
+                         ", I'm interested in renting your "
                                   + myItem.getTitle() + ".";
                 defaultFirstMsg.setMsg(defaultMsg);
 
@@ -290,6 +315,31 @@ public class ListingActivity extends BaseActivity{
                                                    }
                                                }
                         );
+
+
+                Rental newRental = new Rental();
+                newRental.setRentalId(rental_id);
+                newRental.setRenter(myUser.getUid());
+                newRental.setOwner(myItem.getUid());
+                newRental.setItem(myItem);
+                newRental.setRentalStatus(1);//1 means contacted but not rented. 2 is rented and 3 is returned.0 means remove from trade list
+
+                Call<Rental> call = rentalEndpoint.addRental(newRental);
+                call.enqueue(new Callback<Rental>() {
+                    @Override
+                    public void onResponse(Call<Rental> call, Response<Rental> response) {
+                        int statusCode = response.code();
+
+                        Log.d("retrofit.call.enqueue", "" + statusCode);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Rental> call, Throwable t) {
+                        Log.d("retrofit.call.enqueue", t.toString());
+                    }
+
+                });
 
                 Intent myIntent = new Intent(ListingActivity.this, ChatActivity.class);
                 myIntent.putExtra(Config.EXTRA_DATA, convo);

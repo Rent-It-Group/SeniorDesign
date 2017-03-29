@@ -51,3 +51,10 @@ module.exports.getReviewsByItemId = function(item, callback){
 		.where('item').equals(item)
 		.exec(callback);
 }
+
+//Get Reviews by Owner Id
+module.exports.getReviewsByOwnerId = function(owner, callback){
+	Review.find()
+		.where('owner').equals(owner)
+		.exec(callback);
+}

@@ -28,9 +28,9 @@ public class Item implements Serializable {
     @SerializedName("condition")
     @Expose
     private String condition;
-    @SerializedName("location")
+    /*@SerializedName("location")
     @Expose
-    private List<Double> location = null;
+    private List<Double> location = null;*/
     @SerializedName("city")
     @Expose
     private String city;
@@ -76,6 +76,47 @@ public class Item implements Serializable {
         image = "";
         visible = false;
     }*/
+    private final static long serialVersionUID = -3779499934553630833L;
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public Item() {
+    }
+
+    /**
+     *
+     * @param tags
+     * @param uid
+     * @param visible
+     * @param condition
+     * @param zipcode
+     * @param image
+     * @param city
+     * @param id
+     * @param category
+     * @param title
+     * @param rate
+     * @param description
+     * @param value
+     */
+    public Item(String id, String category, String city, String condition, String description, String image, Double rate, String title, String uid, Double value, Boolean visible, Integer zipcode, List<String> tags) {
+        super();
+        this.id = id;
+        this.category = category;
+        this.city = city;
+        this.condition = condition;
+        this.description = description;
+        this.image = image;
+        this.rate = rate;
+        this.title = title;
+        this.uid = uid;
+        this.value = value;
+        this.visible = visible;
+        this.zipcode = zipcode;
+        this.tags = tags;
+    }
 
     public String getId() {
         return id;
@@ -117,14 +158,14 @@ public class Item implements Serializable {
         this.condition = condition;
     }
 
-    public List<Double> getLocation() {
+   /* public List<Double> getLocation() {
         return location;
     }
 
     public void setLocation(List<Double> location) {
         this.location = location;
     }
-
+*/
     public String getCity() {
         return city;
     }
@@ -189,5 +230,7 @@ public class Item implements Serializable {
         this.visible = visible;
     }
 
-
+    public String toString(){
+        return getTitle();
+    }
 }

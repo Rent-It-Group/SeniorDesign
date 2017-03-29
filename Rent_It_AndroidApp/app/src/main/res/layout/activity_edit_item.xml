@@ -65,7 +65,7 @@
                 android:layout_above="@+id/view_below" >
 
                 <RadioButton
-                    android:id="@+id/radio1"
+                    android:id="@+id/listed"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                     android:text="Listed" />
 
                 <RadioButton
-                    android:id="@+id/radio2"
+                    android:id="@+id/hidden"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"

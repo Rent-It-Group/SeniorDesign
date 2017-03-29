@@ -1,9 +1,11 @@
 package com.rent_it_app.rent_it;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -48,10 +50,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BrowseActivity extends BaseActivity{
 
+    private static final String TAG = "BrowseActivity";
+
     private Category myCategory;
     private String category_id;
     private String category_name;
     private ArrayList<Item> brwsList;
+    private BrowseAdapter brwsAdapter;
     private ArrayList<File> photoList;
     private ListView blist;
     Retrofit retrofit;
@@ -61,10 +66,12 @@ public class BrowseActivity extends BaseActivity{
     private CognitoCachingCredentialsProvider credentialsProvider;
     private CognitoSyncManager syncClient;
     private AmazonS3 s3;
+    private Handler mHandler = new Handler();
     private TransferUtility transferUtility;
     private File imageFile;
-    private HashMap<Integer, File> imageHash;
-    private HashMap<Integer, ImageView> imageViewHash;
+    private HashMap<Integer, Integer> percentageHash;
+    private HashMap<Integer, File> fileHash;
+    private ArrayList<TransferObserver> observers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +79,12 @@ public class BrowseActivity extends BaseActivity{
         setContentView(R.layout.activity_browse);
 
         photoList = new ArrayList<>();
+        final ProgressDialog dia = ProgressDialog.show(this, null, "Loading...");
 
-        imageHash = new HashMap<>();
-        imageViewHash = new HashMap<>();
+        percentageHash = new HashMap<>();
+        fileHash = new HashMap<>();
+        observers = new ArrayList<>();
+        //final ProgressDialog dia = ProgressDialog.show(this, null, "Loading...");
 
         credentialsProvider = new CognitoCachingCredentialsProvider(
                 getApplicationContext(),  // getApplicationContext(),
@@ -100,6 +110,16 @@ public class BrowseActivity extends BaseActivity{
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.back_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                //startActivity(new Intent(BrowseActivity.this, HomeActivity.class));
+                        //.putExtra("fragment_name", "ChatListFragment"));
+                //startActivity(new Intent(this, ChatListFragment.class));
+            }
+        });
         this.getSupportActionBar().setTitle(category_name);
 
         gson = new Gson();
@@ -119,6 +139,12 @@ public class BrowseActivity extends BaseActivity{
                 int statusCode = response.code();
                 //List<Item> items = response.body();
                 brwsList = response.body();
+
+                for(int i = 0; i < brwsList.size(); i++) {
+                    Item item = brwsList.get(i);
+
+                    beginPhotoDownload(item.getImage(), i);
+                }
 
                 /*for(Item item : brwsList) {
                     // load the bitmapList with the images
@@ -156,7 +182,9 @@ public class BrowseActivity extends BaseActivity{
 
 
                 //tv1.setText(sb.toString());
-                blist.setAdapter(new BrowseAdapter());
+                brwsAdapter = new BrowseAdapter();
+                blist.setAdapter(brwsAdapter);
+
                 blist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -170,14 +198,85 @@ public class BrowseActivity extends BaseActivity{
                 });
 
                 Log.d("retrofit.call.enqueue", ""+statusCode);
+                mHandler.postDelayed(new Runnable() {
+                    public void run() {
+                        dia.dismiss();
+                    }
+                }, 1000);
             }
 
             @Override
             public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
                 Log.d("retrofit.call.enqueue", "failed");
+                mHandler.postDelayed(new Runnable() {
+                    public void run() {
+                        dia.dismiss();
+                    }
+                }, 1000);
             }
         });
     }
+
+    private void beginPhotoDownload(String key, int index){
+        File outputDir = getApplicationContext().getCacheDir(); // context being the Activity pointer
+        try {
+
+            File imageFile = File.createTempFile(key, "", outputDir);
+            fileHash.put(index, imageFile);
+            imageFile.deleteOnExit();
+            TransferObserver transferObserver =
+                    transferUtility.download(Constants.BUCKET_NAME, key, imageFile);
+            transferObserver.setTransferListener(new DownloadListener());
+            observers.add(transferObserver);
+            Log.d("beginPhotoDownload:", "added TransferObserver");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * Updates the ListView according to observers, by making transferRecordMap
+     * reflect the current data in observers.
+     */
+    private void updateList() {
+        for (int i = 0; i < observers.size(); i++) {
+            int progress = (int) ((double) observers.get(0).getBytesTransferred() * 100 / observers.get(0)
+                    .getBytesTotal());
+            percentageHash.put(i, progress);
+        }
+        brwsAdapter.notifyDataSetChanged();
+    }
+
+    /*
+     * A TransferListener class that can listen to a download task and be
+     * notified when the status changes.
+     */
+    private class DownloadListener implements TransferListener {
+        // Simply updates the list when notified.
+        @Override
+        public void onError(int id, Exception e) {
+            Log.e(TAG, "onError: " + id, e);
+            //updateList();
+        }
+
+        @Override
+        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+            Log.d(TAG, String.format("onProgressChanged: %d, total: %d, current: %d",
+                    id, bytesTotal, bytesCurrent));
+            //updateList();
+        }
+
+        @Override
+        public void onStateChanged(int id, TransferState state) {
+            Log.d(TAG, "onStateChanged: " + id + ", " + state);
+            if(state == TransferState.COMPLETED) {
+                Log.d("DownloadListener:", "COMPLETED");
+                updateList();
+            }
+
+        }
+    }
+
     private class BrowseAdapter extends BaseAdapter
     {
 
@@ -214,6 +313,8 @@ public class BrowseActivity extends BaseActivity{
             if (v == null)
                 v = getLayoutInflater().inflate(R.layout.listing_item, arg2, false);
 
+
+
             Item c = getItem(pos);
 
             /*TextView lbl = (TextView) v;
@@ -228,7 +329,13 @@ public class BrowseActivity extends BaseActivity{
             rate.setText("$" + c.getRate() + " /day");
             File outputDir = getApplicationContext().getCacheDir(); // context being the Activity pointer
 
-            try {
+            if(percentageHash.size() > pos && percentageHash.get(pos) >= 100) {
+                Log.d("adp.getView", "percentage: " + percentageHash.get(pos));
+                Bitmap myBitmap = BitmapFactory.decodeFile(fileHash.get(pos).getAbsolutePath());
+                photo.setImageBitmap(myBitmap/*Bitmap.createScaledBitmap(myBitmap, 200, 150, false)*/);
+            }
+
+            /*try {
                 File imageFile = File.createTempFile(c.getImage(), "", outputDir);
                 imageFile.deleteOnExit();
                 TransferObserver transferObserver =
@@ -257,7 +364,7 @@ public class BrowseActivity extends BaseActivity{
                 });
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             return v;
         }

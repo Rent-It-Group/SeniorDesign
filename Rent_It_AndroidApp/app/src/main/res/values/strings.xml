@@ -29,7 +29,7 @@
 
 
     <!-- Navigation Drawer menu labels -->
-    <string name="nav_search">Search Item</string>
+    <string name="nav_search">Find Item</string>
     <string name="nav_list">List Item</string>
     <string name="nav_trade">Trade Item</string>
     <string name="nav_rental">My Rentals</string>
@@ -66,6 +66,20 @@
         <item>Electronics</item>
         <item>Books</item>
         <item>Miscellaneous</item>
+    </string-array>
+
+    <string-array name="owner_reason_array">
+        <item>Choose a Reason</item>
+        <item>Item Damaged</item>
+        <item>Renter not responding</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="renter_reason_array">
+        <item>Choose a Reason</item>
+        <item>Item damaged/does not work</item>
+        <item>Item not as described</item>
+        <item>Other</item>
     </string-array>
 
 </resources>

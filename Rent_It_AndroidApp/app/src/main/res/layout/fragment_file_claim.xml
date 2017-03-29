@@ -1,0 +1,221 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/windowBackground"
+    tools:context="com.rent_it_app.rent_it.views.ListItemFragment">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/tab_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="New"
+                android:background="@drawable/buttonshape1"
+                android:minHeight="30dp"
+                android:textColor="#FFFFFF"
+                android:layout_weight="1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="History"
+                android:minHeight="30dp"
+                android:background="@drawable/buttonshape2"
+                android:textColor="#616161"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_question"
+            android:textColor="@color/colorLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I am an/a"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp" />
+
+        <RadioGroup
+            android:id="@+id/radio_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/owner"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Owner" />
+
+            <RadioButton
+                android:id="@+id/renter"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Renter" />
+        </RadioGroup>
+
+        <!--Item-->
+        <TextView
+            android:id="@+id/label6"
+            android:textColor="@color/colorLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select the Item"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:spinnerMode="dialog"/>
+
+        <!--Initial Meeting Date-->
+        <TextView
+            android:id="@+id/label0"
+            android:textColor="@color/colorLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Initial Meeting Date"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/in_date"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bg"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:padding="5dp"/>
+
+            <Button
+                android:layout_height="wrap_content"
+                android:text="SELECT DATE"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:id="@+id/btn_date" />
+
+        </LinearLayout>
+
+
+
+        <!--Item-->
+        <TextView
+            android:id="@+id/label7"
+            android:textColor="@color/colorLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select the reason"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:spinnerMode="dialog"/>
+
+        <!--Description-->
+        <TextView
+            android:id="@+id/label2"
+            android:textColor="@color/colorLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Issue"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <EditText
+            android:id="@+id/issue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bg"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:lines="8"
+            android:scrollbars="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="5dp"/>
+
+        <!--Image-->
+        <TextView
+            android:id="@+id/label10"
+            android:textColor="@color/colorLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/item_image"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+
+        <Button
+            android:id="@+id/image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"
+            android:textColor="@color/colorLabel"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Select Photo" />
+
+        <ImageView
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/preview"
+            android:padding="5dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Submit Claim"
+            android:id="@+id/submit_button"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorAccent"
+            android:layout_gravity="center_horizontal"/>
+
+
+
+      </LinearLayout>
+    </ScrollView>
+    <!--</RelativeLayout>-->
+</FrameLayout>

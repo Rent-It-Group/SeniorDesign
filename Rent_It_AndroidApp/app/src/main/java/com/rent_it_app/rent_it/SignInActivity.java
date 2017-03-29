@@ -4,7 +4,9 @@ package com.rent_it_app.rent_it;
  * Created by Mizz on 1/10/17.
  */
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,9 +22,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.rent_it_app.rent_it.firebase.DeleteTokenService;
 import com.rent_it_app.rent_it.json_models.ChatUser;
 import com.rent_it_app.rent_it.views.ChatListFragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SignInActivity extends BaseActivity {
@@ -89,6 +94,10 @@ public class SignInActivity extends BaseActivity {
                     /*ChatListFragment.user = new ChatUser(user.getUid(), user.getDisplayName(),
                             user.getEmail(),true,defaultRoom);*/
 
+                    Intent deleteTokenIntent = new Intent(SignInActivity.this, DeleteTokenService.class);
+                    //msgIntent.putExtra(DeleteTokenService.PARAM_IN_MSG, strInputMsg);
+                    startService(deleteTokenIntent);
+
                     Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
                     startActivity(intent);
                 }
@@ -151,7 +160,6 @@ public class SignInActivity extends BaseActivity {
                 });
 
     }
-
 
     private boolean validateForm() {
         boolean valid = true;

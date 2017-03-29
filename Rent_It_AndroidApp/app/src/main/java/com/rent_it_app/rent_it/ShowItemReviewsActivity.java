@@ -145,7 +145,15 @@ public class ShowItemReviewsActivity extends BaseActivity{
             DateTime dateTimeObj = ISODateTimeFormat.dateTime().parseDateTime(c.getDateCreated());
             Log.d("jodatime.ISODateTime: ", dateTimeObj.toString());
             date.setText("Submitted: "+ dateTimeObj.toString( "dd/MM/yy"));
-            String s = c.getReviewer().substring(0, 15) + "...";
+            //String s = c.getReviewer().substring(0, 15) + "...";
+            String s = c.getReviewer();
+            if (s.equals("onBNW00rlNg9S1CmBWDHTOu0j3Z2")){
+                s="Mimi M";
+            }else if(s.equals("DXvNYnJragb5rF64XaQ67iyfxh42")){
+                s="Bonnie M";
+            }else{
+                s = c.getReviewer();
+            }
             reviewer.setText("by " + s);
             comment.setText(c.getItemComment());
             itemRating.setRating(c.getItemRating());

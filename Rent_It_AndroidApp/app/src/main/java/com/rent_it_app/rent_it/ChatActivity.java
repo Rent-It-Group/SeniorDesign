@@ -3,6 +3,7 @@ package com.rent_it_app.rent_it;
 /**
  * Created by Mimi on 2/21/17.
  */
+import android.content.Intent;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -38,6 +39,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rent_it_app.rent_it.json_models.Conversation;
+import com.rent_it_app.rent_it.views.ChatListFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,11 +109,21 @@ public class ChatActivity extends BaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.back_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class)
+                        .putExtra("fragment_name", "ChatListFragment"));
+                //startActivity(new Intent(this, ChatListFragment.class));
+            }
+        });
 
         if(myUser.getUid().contentEquals(myConversation.getRenter())) {
             buddyId = myConversation.getOwner();
             Log.d("Test","owner: "+myConversation.getOwner());
-            this.getSupportActionBar().setTitle(buddyId);
+            //this.getSupportActionBar().setTitle(buddyId);
+            this.getSupportActionBar().setTitle("Edward James");
         }else{
             buddyId = myConversation.getRenter();
             Log.d("Test","renter: "+myConversation.getRenter());

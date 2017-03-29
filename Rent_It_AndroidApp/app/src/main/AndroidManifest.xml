@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -17,33 +18,60 @@
         android:theme="@style/MyMaterialTheme">
         <activity android:name=".SignInActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity"></activity>
         <activity android:name=".ResetPasswordActivity"></activity>
         <activity android:name=".ChatActivity"></activity>
         <activity android:name=".BrowseActivity"></activity>
+        <activity android:name=".SearchActivity"></activity>
         <activity android:name=".ListingActivity"></activity>
         <activity android:name=".EditItemActivity"></activity>
-        <activity android:name=".ShowItemReviewsActivity"></activity>
-        <activity android:name=".testing.NotificationActivity">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
-        <activity
-            android:name=".HomeActivity"
-            android:label="@string/title_activity_home"
-            android:theme="@style/MyMaterialTheme">
+        <activity android:name=".SendRequestActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity android:name=".PickDatesActivity">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
         </activity>
+        <activity android:name=".ShowItemReviewsActivity"></activity>
+        <activity android:name=".ShowOwnerReviewsActivity"></activity>
+        <activity android:name=".ConfirmRentalActivity"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".testing.NotificationActivity">
 
+        </activity>
+        <activity
+            android:name=".HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/MyMaterialTheme">
+            <intent-filter >
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.rentitapp.rentit.braintree" />
+            </intent-filter>
+        </activity>
+
+        <!-- Declaring Service in Manifest -->
+        <service
+            android:name=".firebase.DeleteTokenService"
+            android:exported="false" />
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true"
